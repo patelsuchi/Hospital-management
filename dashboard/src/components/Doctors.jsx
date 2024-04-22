@@ -1,12 +1,15 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-key */
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Context } from "../main";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
   const { isAuthenticated } = useContext(Context);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -21,6 +24,28 @@ const Doctors = () => {
     };
     fetchDoctors();
   }, []);
+
+  const handleUpdateDoctor = (id) => {
+    // Redirect or handle update functionality here
+    navigate(`/update-doctor/${id}`);
+  };
+  const handleDeleteDoctor = async (id) => {
+    try {
+      await axios.delete(
+        `http://localhost:4000/api/v1/user/doctor/${id}/delete`,
+        { withCredentials: true }
+      );
+      toast.success("Doctor deleted successfully");
+      // Refresh doctors list after deletion
+      const { data } = await axios.get(
+        "http://localhost:4000/api/v1/user/doctors",
+        { withCredentials: true }
+      );
+      setDoctors(data.doctors);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
@@ -57,6 +82,22 @@ const Doctors = () => {
                   <p>
                     Gender: <span>{element.gender}</span>
                   </p>
+                </div>
+
+                <div className="card-1" key={element._id}>
+                  {/* Update and delete buttons */}
+                  <button
+                    onClick={() => handleUpdateDoctor(element._id)}
+                    className="btn-1"
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => handleDeleteDoctor(element._id)}
+                    className="btn-2"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             );

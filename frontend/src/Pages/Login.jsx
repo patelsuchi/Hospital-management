@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -33,8 +34,18 @@ const Login = () => {
           setPassword("");
           setConfirmPassword("");
         });
-    } catch (error) {
-      toast.error(error.response.data.message);
+    }catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(
+          "An error occurred while login. Please try again later."
+        );
+      }
     }
   };
 

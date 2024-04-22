@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+/* eslint-disable no-unused-vars */
+import React, { useContext, useState, useEffect } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context } from "../main";
 import axios from "axios";
 
 const AddNewDoctor = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
-
+  const { id } = useParams();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,8 +19,10 @@ const AddNewDoctor = () => {
   const [doctorDepartment, setDoctorDepartment] = useState("");
   const [docAvatar, setDocAvatar] = useState("");
   const [docAvatarPreview, setDocAvatarPreview] = useState("");
-
+  
   const navigateTo = useNavigate();
+
+
 
   const departmentsArray = [
     "Pediatrics",
@@ -86,7 +89,7 @@ const AddNewDoctor = () => {
   return (
     <section className="page">
       <section className="container add-doctor-form">
-        <img src="/logo.png" alt="logo" className="logo"/>
+        <img src="/logo.png" alt="logo" className="logo" />
         <h1 className="form-title">REGISTER A NEW DOCTOR</h1>
         <form onSubmit={handleAddNewDoctor}>
           <div className="first-wrapper">

@@ -7,6 +7,7 @@ import cloudinary from "cloudinary";
 export const patientRegister = catchAsyncErrors(async (req, res, next) => {
   const { firstName, lastName, email, phone, nic, dob, gender, password } =
     req.body;
+    const parsedDob = new Date(dob);
   if (
     !firstName ||
     !lastName ||
@@ -14,6 +15,7 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     !phone ||
     !nic ||
     !dob ||
+    !parsedDob ||
     !gender ||
     !password
   ) {
@@ -31,7 +33,7 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
     email,
     phone,
     nic,
-    dob,
+    dob: parsedDob,
     gender,
     password,
     role: "Patient",
@@ -65,13 +67,15 @@ export const login = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
-  const { firstName, lastName, email, phone, nic, dob, gender, password } =
+  const { firstName, lastName, email, phone, nic,dob, gender, password } =
     req.body;
+    const parsedDob = new Date(dob);
   if (
     !firstName ||
     !lastName ||
     !email ||
     !phone ||
+    !parsedDob ||
     !nic ||
     !dob ||
     !gender ||
@@ -91,7 +95,7 @@ export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
     email,
     phone,
     nic,
-    dob,
+    dob : parsedDob,
     gender,
     password,
     role: "Admin",
@@ -220,4 +224,71 @@ export const logoutPatient = catchAsyncErrors(async (req, res, next) => {
       success: true,
       message: "Patient Logged Out Successfully.",
     });
+});
+
+
+
+
+
+
+// userController.js
+
+// Update existing doctor details
+// Update existing doctor details
+export const updateDoctor = async (req, res, next) => {
+  try {
+  const { docAvatar } = req.files;
+;
+    const doctorId = req.params.id;
+    const { firstName, lastName, email, phone, nic, dob, gender, doctorDepartment } = req.body;
+
+    // Validate inputs
+    if (!firstName || !lastName || !email || !phone || !nic || !dob || !gender || !doctorDepartment   ) {
+      throw new ErrorHandler("Please fill all fields", 400);
+    }
+    const cloudinaryResponse = await cloudinary.uploader.upload(
+      docAvatar.tempFilePath
+    );
+    if (!cloudinaryResponse || cloudinaryResponse.error) {
+      console.error(
+        "Cloudinary Error:",
+        cloudinaryResponse.error || "Unknown Cloudinary error"
+      );
+      return next(
+        new ErrorHandler("Failed To Upload Doctor Avatar To Cloudinary", 500)
+      );
+    }
+    // Update doctor details
+    const updatedDoctor = await User.findByIdAndUpdate(
+      doctorId,
+      { firstName, lastName, email, phone, nic, dob, gender, doctorDepartment, docAvatar: {
+        public_id: cloudinaryResponse.public_id,
+        url: cloudinaryResponse.secure_url,
+      },  },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Doctor details updated successfully",
+      doctor: updatedDoctor,
+    });
+  } catch (error) {
+    next(error);
+    console.log(error);
+    console.log(error.message); // Pass the error to the next error handler
+  }
+};
+
+// Delete doctor
+export const deleteDoctor = catchAsyncErrors(async (req, res, next) => {
+  const doctorId = req.params.id;
+
+  // Delete doctor
+  await User.findByIdAndDelete(doctorId);
+
+  res.status(200).json({
+    success: true,
+    message: "Doctor deleted successfully",
+  });
 });

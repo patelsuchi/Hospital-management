@@ -1,14 +1,15 @@
 export const generateToken = (user, message, statusCode, res) => {
   const token = user.generateJsonWebToken();
-  // Determine the cookie name based on the user's role
-  const cookieName = user.role === 'Admin' ? 'adminToken' : 'patientToken';
+
+  const cookieName = user.role === "Admin" ? "adminToken" : "patientToken";
+
+  // Calculate the expiration time in milliseconds
+  const expirationTime = Date.now() + parseInt(process.env.COOKIE_EXPIRE) * 24 * 60 * 60 * 1000;
 
   res
     .status(statusCode)
     .cookie(cookieName, token, {
-      expires: new Date(
-        Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-      ),
+      expires: new Date(expirationTime), // Convert expiration time to a Date object
       httpOnly: true,
     })
     .json({
@@ -18,4 +19,3 @@ export const generateToken = (user, message, statusCode, res) => {
       token,
     });
 };
-

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -164,6 +165,7 @@ const AppointmentForm = () => {
                 );
               })}
             </select>
+            
             <select
               value={`${doctorFirstName} ${doctorLastName}`}
               onChange={(e) => {

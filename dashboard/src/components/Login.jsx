@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -13,26 +14,49 @@ const Login = () => {
 
   const navigateTo = useNavigate();
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios
+  //       .post(
+  //         "http://localhost:4000/api/v1/user/login",
+  //         { email, password, confirmPassword, role: "Admin" },
+  //         {
+  //           withCredentials: true,
+  //           headers: { "Content-Type": "application/json" },
+  //         }
+  //       )
+  //       .then((res) => {
+  //         toast.success(res.data.message);
+  //         setIsAuthenticated(true);
+  //         navigateTo("/");
+  //         setEmail("");
+  //         setPassword("");
+  //         setConfirmPassword("");
+  //       });
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //   }
+  // };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(
-          "http://localhost:4000/api/v1/user/login",
-          { email, password, confirmPassword, role: "Admin" },
-          {
-            withCredentials: true,
-            headers: { "Content-Type": "application/json" },
-          }
-        )
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/");
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-        });
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/user/login",
+        { email, password, confirmPassword, role: "Admin" },
+        { withCredentials: true } // Ensure withCredentials is set for sending cookies
+      );
+      // Assuming the token is returned in the response data
+      const authToken = res.data.token; // Adjust according to your actual response structure
+      // Store token in local storage or cookies
+      localStorage.setItem("adminToken", authToken);
+      toast.success(res.data.message);
+      setIsAuthenticated(true);
+      navigateTo("/");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     } catch (error) {
       toast.error(error.response.data.message);
     }

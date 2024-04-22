@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import React, { useContext, useState } from "react";
 import { Context } from "../main";
 import { Navigate, useNavigate } from "react-router-dom";

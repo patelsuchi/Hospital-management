@@ -451,6 +451,58 @@ body {
   gap: 8px;
   font-size: 20px;
 }
+
+
+
+
+
+
+/* Doctors.css */
+
+.card {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.card-1{
+  margin-top: 20px;
+}
+.btn-1,
+.btn-2 {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.btn-1 {
+  background-color: green;
+  color: white;
+}
+
+.btn-2 {
+  background-color: red;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .doctors .banner .card div p {
   font-weight: 700;
 }

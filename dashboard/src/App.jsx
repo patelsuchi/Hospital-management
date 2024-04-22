@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
@@ -12,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";
 import AddNewAdmin from "./components/AddNewAdmin";
 import "./App.css";
+import UpdateDoctor from "./components/UpdateDoctor";
 
 const App = () => {
   const { isAuthenticated, setIsAuthenticated, admin, setAdmin } =
@@ -46,6 +48,7 @@ const App = () => {
         <Route path="/admin/addnew" element={<AddNewAdmin />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/doctors" element={<Doctors />} />
+        <Route path="/update-doctor/:id" element={<UpdateDoctor />} /> 
       </Routes>
       <ToastContainer position="top-center" />
     </Router>
